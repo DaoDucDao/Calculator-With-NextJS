@@ -43,15 +43,15 @@ export default function ConverterPage() {
   };
 
   const selectClass =
-    "w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-zinc-200 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all appearance-none";
+    "w-full bg-raised border border-line rounded-xl px-4 py-3 text-sm text-fg-2 focus:outline-none focus:ring-2 focus:ring-ring transition-all appearance-none";
 
   const inputClass =
-    "w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-lg font-mono text-white focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all text-right";
+    "w-full bg-raised border border-line rounded-xl px-4 py-3 text-lg font-mono text-fg focus:outline-none focus:ring-2 focus:ring-ring transition-all text-right";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md">
-        <h1 className="text-center text-2xl font-bold mb-6 text-zinc-300">
+        <h1 className="text-center text-2xl font-bold mb-6 text-fg-2">
           Unit Converter
         </h1>
 
@@ -63,8 +63,8 @@ export default function ConverterPage() {
               onClick={() => handleCategoryChange(i)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 i === categoryIndex
-                  ? "bg-amber-600 text-white"
-                  : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                  ? "bg-accent text-white"
+                  : "bg-raised text-fg-3 hover:bg-muted"
               }`}
             >
               {cat.icon} {cat.name}
@@ -72,10 +72,10 @@ export default function ConverterPage() {
           ))}
         </div>
 
-        <div className="bg-zinc-900 rounded-2xl p-5 space-y-4">
+        <div className="bg-panel rounded-2xl p-5 space-y-4">
           {/* From */}
           <div className="space-y-2">
-            <label className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
               From
             </label>
             <select
@@ -102,7 +102,7 @@ export default function ConverterPage() {
           <div className="flex justify-center">
             <button
               onClick={swap}
-              className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 hover:text-amber-400 hover:border-amber-500/50 transition-all active:scale-90"
+              className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-all active:scale-90"
             >
               ⇅
             </button>
@@ -110,7 +110,7 @@ export default function ConverterPage() {
 
           {/* To */}
           <div className="space-y-2">
-            <label className="text-xs text-zinc-500 font-medium uppercase tracking-wider">
+            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
               To
             </label>
             <select
@@ -124,11 +124,11 @@ export default function ConverterPage() {
                 </option>
               ))}
             </select>
-            <div className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-right">
+            <div className="bg-raised border border-line rounded-xl px-4 py-3 text-right">
               <span className="text-lg font-mono text-emerald-400">
                 {result || "—"}
               </span>
-              <span className="text-sm text-zinc-500 ml-2">{toUnit.symbol}</span>
+              <span className="text-sm text-fg-muted ml-2">{toUnit.symbol}</span>
             </div>
           </div>
 
@@ -136,14 +136,14 @@ export default function ConverterPage() {
           <button
             onClick={handleConvert}
             disabled={!result}
-            className="w-full py-3 rounded-xl bg-amber-600 text-white font-medium hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full py-3 rounded-xl bg-accent text-white font-medium hover:bg-accent-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             Save to History
           </button>
 
           {/* Quick reference */}
-          <div className="border-t border-zinc-800 pt-4">
-            <p className="text-xs text-zinc-600 mb-2 font-medium uppercase tracking-wider">
+          <div className="border-t border-line-soft pt-4">
+            <p className="text-xs text-fg-faint mb-2 font-medium uppercase tracking-wider">
               Quick Reference
             </p>
             <div className="grid grid-cols-2 gap-1.5">
@@ -156,10 +156,10 @@ export default function ConverterPage() {
                   return (
                     <div
                       key={i}
-                      className="flex justify-between bg-zinc-800/50 rounded-lg px-3 py-2"
+                      className="flex justify-between bg-raised/50 rounded-lg px-3 py-2"
                     >
-                      <span className="text-xs text-zinc-500">{u.symbol}</span>
-                      <span className="text-xs text-zinc-300 font-mono">
+                      <span className="text-xs text-fg-muted">{u.symbol}</span>
+                      <span className="text-xs text-fg-2 font-mono">
                         {parseFloat(converted.toPrecision(6))}
                       </span>
                     </div>

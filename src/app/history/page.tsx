@@ -7,6 +7,7 @@ const TYPE_LABELS = {
   scientific: { label: "Scientific", color: "text-amber-400 bg-amber-400/10" },
   programmer: { label: "Programmer", color: "text-cyan-400 bg-cyan-400/10" },
   converter: { label: "Converter", color: "text-emerald-400 bg-emerald-400/10" },
+  datetime: { label: "Date/Time", color: "text-rose-400 bg-rose-400/10" },
 };
 
 export default function HistoryPage() {
@@ -34,7 +35,7 @@ export default function HistoryPage() {
   if (!loaded) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-zinc-500">Loading...</p>
+        <p className="text-fg-muted">Loading...</p>
       </div>
     );
   }
@@ -43,8 +44,8 @@ export default function HistoryPage() {
     <div className="min-h-screen p-4 py-8 max-w-2xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-300">History</h1>
-          <p className="text-sm text-zinc-500 mt-0.5">
+          <h1 className="text-2xl font-bold text-fg-2">History</h1>
+          <p className="text-sm text-fg-muted mt-0.5">
             {entries.length} calculation{entries.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -52,7 +53,7 @@ export default function HistoryPage() {
           <div className="relative">
             {showClearConfirm ? (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-zinc-400">Clear all?</span>
+                <span className="text-xs text-fg-3">Clear all?</span>
                 <button
                   onClick={() => {
                     clearHistory();
@@ -64,7 +65,7 @@ export default function HistoryPage() {
                 </button>
                 <button
                   onClick={() => setShowClearConfirm(false)}
-                  className="px-3 py-1.5 rounded-lg bg-zinc-700 text-zinc-300 text-xs hover:bg-zinc-600 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-muted text-fg-2 text-xs hover:bg-dim transition-colors"
                 >
                   No
                 </button>
@@ -72,7 +73,7 @@ export default function HistoryPage() {
             ) : (
               <button
                 onClick={() => setShowClearConfirm(true)}
-                className="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-400 text-sm hover:bg-zinc-700 border border-zinc-700 transition-colors"
+                className="px-4 py-2 rounded-xl bg-raised text-fg-3 text-sm hover:bg-muted border border-line transition-colors"
               >
                 Clear All
               </button>
@@ -88,14 +89,15 @@ export default function HistoryPage() {
           { key: "scientific", label: "Scientific" },
           { key: "programmer", label: "Programmer" },
           { key: "converter", label: "Converter" },
+          { key: "datetime", label: "Date/Time" },
         ].map((f) => (
           <button
             key={f.key}
             onClick={() => setFilter(f.key)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               filter === f.key
-                ? "bg-amber-600 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                ? "bg-accent text-white"
+                : "bg-raised text-fg-3 hover:bg-muted"
             }`}
           >
             {f.label}
@@ -105,10 +107,10 @@ export default function HistoryPage() {
 
       {/* History entries */}
       {filtered.length === 0 ? (
-        <div className="bg-zinc-900 rounded-2xl p-12 text-center">
-          <p className="text-zinc-500 text-4xl mb-3">📜</p>
-          <p className="text-zinc-400">No history yet</p>
-          <p className="text-zinc-600 text-sm mt-1">
+        <div className="bg-panel rounded-2xl p-12 text-center">
+          <p className="text-fg-muted text-4xl mb-3">📜</p>
+          <p className="text-fg-3">No history yet</p>
+          <p className="text-fg-faint text-sm mt-1">
             Your calculations will appear here
           </p>
         </div>
@@ -116,10 +118,10 @@ export default function HistoryPage() {
         <div className="space-y-6">
           {Object.entries(grouped).map(([date, items]) => (
             <div key={date}>
-              <h3 className="text-xs text-zinc-600 font-medium uppercase tracking-wider mb-2 px-1">
+              <h3 className="text-xs text-fg-faint font-medium uppercase tracking-wider mb-2 px-1">
                 {date}
               </h3>
-              <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+              <div className="bg-panel rounded-2xl overflow-hidden">
                 {items.map((entry, i) => {
                   const typeInfo =
                     TYPE_LABELS[entry.type as keyof typeof TYPE_LABELS] ??
@@ -127,8 +129,8 @@ export default function HistoryPage() {
                   return (
                     <div
                       key={entry.id}
-                      className={`flex items-center justify-between px-5 py-3.5 hover:bg-zinc-800/30 transition-colors ${
-                        i < items.length - 1 ? "border-b border-zinc-800/50" : ""
+                      className={`flex items-center justify-between px-5 py-3.5 hover:bg-raised/30 transition-colors ${
+                        i < items.length - 1 ? "border-b border-line-soft/50" : ""
                       }`}
                     >
                       <div className="flex-1 min-w-0">
@@ -138,23 +140,23 @@ export default function HistoryPage() {
                           >
                             {typeInfo.label}
                           </span>
-                          <span className="text-[10px] text-zinc-600">
+                          <span className="text-[10px] text-fg-faint">
                             {new Date(entry.timestamp).toLocaleTimeString("en-US", {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
                           </span>
                         </div>
-                        <p className="text-sm text-zinc-400 font-mono truncate">
+                        <p className="text-sm text-fg-3 font-mono truncate">
                           {entry.expression}
                         </p>
-                        <p className="text-lg text-white font-mono">
+                        <p className="text-lg text-fg font-mono">
                           = {entry.result}
                         </p>
                       </div>
                       <button
                         onClick={() => deleteEntry(entry.id)}
-                        className="ml-3 text-zinc-600 hover:text-red-400 transition-colors p-1"
+                        className="ml-3 text-fg-faint hover:text-red-400 transition-colors p-1"
                         title="Delete"
                       >
                         &times;
@@ -170,7 +172,7 @@ export default function HistoryPage() {
 
       {/* Stats */}
       {entries.length > 0 && (
-        <div className="mt-6 grid grid-cols-3 gap-3">
+        <div className="mt-6 grid grid-cols-4 gap-3">
           {[
             {
               label: "Scientific",
@@ -187,13 +189,18 @@ export default function HistoryPage() {
               count: entries.filter((e) => e.type === "converter").length,
               color: "text-emerald-400",
             },
+            {
+              label: "Date/Time",
+              count: entries.filter((e) => e.type === "datetime").length,
+              color: "text-rose-400",
+            },
           ].map((s) => (
             <div
               key={s.label}
-              className="bg-zinc-900 rounded-xl px-4 py-3 text-center"
+              className="bg-panel rounded-xl px-4 py-3 text-center"
             >
               <p className={`text-xl font-bold ${s.color}`}>{s.count}</p>
-              <p className="text-[10px] text-zinc-500 mt-0.5">{s.label}</p>
+              <p className="text-[10px] text-fg-muted mt-0.5">{s.label}</p>
             </div>
           ))}
         </div>

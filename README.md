@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scientific Calculator Suite
+
+A fully-featured, multi-mode calculator suite built with Next.js, React, and TypeScript. Works entirely client-side with localStorage persistence.
+
+## Current Features
+
+- **Scientific Calculator** - 20+ math functions, trig (with inverse), logs, powers, roots, constants, memory, keyboard support
+- **Programmer Calculator** - HEX/DEC/OCT/BIN conversions, bitwise operations (AND, OR, XOR, NOT, shifts), configurable bit widths (8/16/32/64)
+- **Unit Converter** - 8 categories (length, weight, temperature, area, volume, speed, time, data) with 40+ units
+- **Currency Converter** - 28 currencies with exchange rate tables and search
+- **Date/Time Calculator** - Duration between dates, add/subtract time, business days, timezone conversions, world clock
+- **Undo/Redo** - Step back and forward through expression edits (Ctrl+Z / Ctrl+Y) in Scientific and Programmer calculators
+- **Theming** - 4 color themes (Dark, Light, Midnight, Sunset) with persistent selection
+- **Calculation History** - Persistent history with filtering by type, date grouping, and stats
+
+## Roadmap
+
+Planned features, in order of implementation:
+
+1. **Graphing Calculator** - Plot functions (y = sin(x), y = x^2, etc.), zoom/pan, multiple curves, intersection detection
+2. **Matrix Calculator** - Add, subtract, multiply matrices, determinants, inverses, eigenvalues
+3. **Equation Solver** - Linear, quadratic, cubic equations and systems of equations with step-by-step solutions
+4. **Live Currency Rates** - Replace static rates with a live exchange rate API
+5. **Statistics Calculator** - Mean, median, mode, standard deviation, variance, regression, probability distributions, combinations/permutations
+6. **Complex Number Support** - Operations on a + bi form for engineering use cases
+7. **Calculus Tools** - Numerical differentiation, integration (trapezoidal/Simpson's rule), limits
+8. **Financial Calculator** - Compound interest, loan amortization, mortgage payments, ROI, present/future value
+9. **LaTeX/MathJax Rendering** - Render expressions with proper mathematical notation
+10. **PWA Support** - Service worker + manifest for installable native-like app experience
+11. **Export History** - Export calculation history to CSV/PDF
+12. **Accessibility Audit** - Screen reader labels, ARIA roles, focus management, high-contrast mode
+13. **Unit Tests** - Test coverage for math utils, conversions, and programmer logic
+
+## Tech Stack
+
+- **Next.js 16** with App Router
+- **React 19** with TypeScript
+- **Tailwind CSS 4** for styling
+- **localStorage** for client-side persistence
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to use the calculator.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/            # Pages (scientific, programmer, converter, currency, datetime, history)
+  components/     # React components (Calculator, Sidebar)
+  hooks/          # Custom hooks (useHistory, useLocalStorage)
+  types/          # TypeScript type definitions
+  utils/          # Conversion, currency, and programmer utilities
+```
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploy on [Vercel](https://vercel.com/new) or any platform that supports Next.js.
