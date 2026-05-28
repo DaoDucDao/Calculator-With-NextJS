@@ -1,16 +1,17 @@
 "use client";
 
 import { createContext, useContext, useEffect, useCallback } from "react";
+import { Moon, Sun, Sparkles, Sunset, type LucideIcon } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 export const THEMES = ["dark", "light", "midnight", "sunset"] as const;
 export type Theme = (typeof THEMES)[number];
 
-export const THEME_META: Record<Theme, { label: string; icon: string }> = {
-  dark: { label: "Dark", icon: "🌑" },
-  light: { label: "Light", icon: "☀️" },
-  midnight: { label: "Midnight", icon: "🌌" },
-  sunset: { label: "Sunset", icon: "🌅" },
+export const THEME_META: Record<Theme, { label: string; Icon: LucideIcon }> = {
+  dark: { label: "Dark", Icon: Moon },
+  light: { label: "Light", Icon: Sun },
+  midnight: { label: "Midnight", Icon: Sparkles },
+  sunset: { label: "Sunset", Icon: Sunset },
 };
 
 const ThemeContext = createContext<{

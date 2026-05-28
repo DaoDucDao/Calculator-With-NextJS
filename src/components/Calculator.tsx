@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Undo2, Redo2, Delete } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import type { AngleMode } from "@/types";
@@ -288,7 +290,18 @@ export default function Calculator() {
             {expression || " "}
           </div>
           <div className="text-right text-4xl font-mono font-light text-fg tracking-wide overflow-hidden text-ellipsis">
-            {display}
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={display}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                className="inline-block"
+              >
+                {display}
+              </motion.span>
+            </AnimatePresence>
           </div>
           <div className="flex justify-between text-xs text-fg-faint mt-1">
             <div className="flex gap-2">
@@ -303,35 +316,36 @@ export default function Calculator() {
           <button
             onClick={handleUndo}
             disabled={!canUndo}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
             title="Undo (Ctrl+Z)"
           >
-            ↩ Undo
+            <Undo2 className="w-3 h-3" /> Undo
           </button>
           <button
             onClick={handleRedo}
             disabled={!canRedo}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
             title="Redo (Ctrl+Y)"
           >
-            Redo ↪
+            Redo <Redo2 className="w-3 h-3" />
           </button>
         </div>
 
         <div className="grid grid-cols-5 gap-[1px] bg-panel rounded-b-2xl overflow-hidden p-[1px]">
           {buttons.map((btn, i) => (
-            <button
+            <motion.button
               key={i}
+              whileTap={{ scale: 0.93 }}
+              transition={{ duration: 0.08 }}
               onClick={btn.action}
               className={`
-                h-14 text-sm font-medium transition-all duration-100
-                active:scale-95 active:brightness-125
+                h-14 text-sm font-medium transition-colors duration-100 flex items-center justify-center
                 ${btn.className ?? "bg-raised hover:bg-muted"}
                 ${["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ".", "±"].includes(btn.label) ? "text-fg" : "text-fg-2"}
               `}
             >
-              {btn.label}
-            </button>
+              {btn.label === "⌫" ? <Delete className="w-4 h-4" /> : btn.label}
+            </motion.button>
           ))}
         </div>
       </div>

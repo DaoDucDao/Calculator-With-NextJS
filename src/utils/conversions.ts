@@ -1,9 +1,19 @@
 import type { ConversionCategory } from "@/types";
+import {
+  Ruler,
+  Weight,
+  Thermometer,
+  Square,
+  Container,
+  Gauge,
+  Timer,
+  HardDrive,
+} from "lucide-react";
 
 export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   {
     name: "Length",
-    icon: "📏",
+    icon: Ruler,
     units: [
       { name: "Meters", symbol: "m", toBase: (v) => v, fromBase: (v) => v },
       { name: "Kilometers", symbol: "km", toBase: (v) => v * 1000, fromBase: (v) => v / 1000 },
@@ -17,7 +27,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Weight",
-    icon: "⚖️",
+    icon: Weight,
     units: [
       { name: "Kilograms", symbol: "kg", toBase: (v) => v, fromBase: (v) => v },
       { name: "Grams", symbol: "g", toBase: (v) => v / 1000, fromBase: (v) => v * 1000 },
@@ -30,7 +40,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Temperature",
-    icon: "🌡️",
+    icon: Thermometer,
     units: [
       { name: "Celsius", symbol: "°C", toBase: (v) => v, fromBase: (v) => v },
       { name: "Fahrenheit", symbol: "°F", toBase: (v) => (v - 32) * (5 / 9), fromBase: (v) => v * (9 / 5) + 32 },
@@ -39,7 +49,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Area",
-    icon: "📐",
+    icon: Square,
     units: [
       { name: "Square Meters", symbol: "m²", toBase: (v) => v, fromBase: (v) => v },
       { name: "Square Kilometers", symbol: "km²", toBase: (v) => v * 1e6, fromBase: (v) => v / 1e6 },
@@ -52,7 +62,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Volume",
-    icon: "🧊",
+    icon: Container,
     units: [
       { name: "Liters", symbol: "L", toBase: (v) => v, fromBase: (v) => v },
       { name: "Milliliters", symbol: "mL", toBase: (v) => v / 1000, fromBase: (v) => v * 1000 },
@@ -66,7 +76,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Speed",
-    icon: "🏎️",
+    icon: Gauge,
     units: [
       { name: "Meters/Second", symbol: "m/s", toBase: (v) => v, fromBase: (v) => v },
       { name: "Kilometers/Hour", symbol: "km/h", toBase: (v) => v / 3.6, fromBase: (v) => v * 3.6 },
@@ -77,7 +87,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Time",
-    icon: "⏱️",
+    icon: Timer,
     units: [
       { name: "Seconds", symbol: "s", toBase: (v) => v, fromBase: (v) => v },
       { name: "Milliseconds", symbol: "ms", toBase: (v) => v / 1000, fromBase: (v) => v * 1000 },
@@ -90,7 +100,7 @@ export const CONVERSION_CATEGORIES: ConversionCategory[] = [
   },
   {
     name: "Data",
-    icon: "💾",
+    icon: HardDrive,
     units: [
       { name: "Bytes", symbol: "B", toBase: (v) => v, fromBase: (v) => v },
       { name: "Kilobytes", symbol: "KB", toBase: (v) => v * 1024, fromBase: (v) => v / 1024 },

@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import * as Tabs from "@radix-ui/react-tabs";
+import { motion, AnimatePresence } from "framer-motion";
+import { Timer, CalendarPlus, Globe, ArrowUpDown, Plus, Minus, type LucideIcon } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import {
   TIMEZONES,
@@ -13,10 +16,10 @@ import {
 
 type Tab = "duration" | "add-subtract" | "timezone";
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
-  { key: "duration", label: "Duration", icon: "⏱" },
-  { key: "add-subtract", label: "Add / Subtract", icon: "📅" },
-  { key: "timezone", label: "Timezone", icon: "🌍" },
+const TABS: { key: Tab; label: string; Icon: LucideIcon }[] = [
+  { key: "duration", label: "Duration", Icon: Timer },
+  { key: "add-subtract", label: "Add / Subtract", Icon: CalendarPlus },
+  { key: "timezone", label: "Timezone", Icon: Globe },
 ];
 
 const UNITS = ["years", "months", "weeks", "days", "hours", "minutes"] as const;
@@ -119,316 +122,287 @@ export default function DateTimePage() {
           Date / Time Calculator
         </h1>
 
-        <div className="flex gap-1.5 mb-6 justify-center">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                tab === t.key
-                  ? "bg-accent text-white"
-                  : "bg-raised text-fg-3 hover:bg-muted"
-              }`}
-            >
-              {t.icon} {t.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="bg-panel rounded-2xl p-5 space-y-4">
-          {tab === "duration" && (
-            <>
-              <div className="space-y-2">
-                <label className={labelClass}>Start Date & Time</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className={inputClass}
-                  />
-                  <input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-center text-fg-faint text-xl">↕</div>
-
-              <div className="space-y-2">
-                <label className={labelClass}>End Date & Time</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className={inputClass}
-                  />
-                  <input
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              {duration && (
-                <div className="bg-raised rounded-xl p-4 space-y-3">
-                  <p className={labelClass}>Duration</p>
-                  <div className="flex flex-wrap gap-2">
-                    {duration.years > 0 && (
-                      <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">
-                        {duration.years}y
-                      </span>
-                    )}
-                    {duration.months > 0 && (
-                      <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">
-                        {duration.months}mo
-                      </span>
-                    )}
-                    <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">
-                      {duration.days}d
-                    </span>
-                    {(duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0) && (
-                      <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">
-                        {duration.hours}h {duration.minutes}m {duration.seconds}s
-                      </span>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-line">
-                    <div className="text-center">
-                      <p className="text-lg font-mono text-fg-2">{duration.totalDays}</p>
-                      <p className="text-[10px] text-fg-muted">Total Days</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-lg font-mono text-fg-2">{duration.weeks}</p>
-                      <p className="text-[10px] text-fg-muted">Weeks</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-lg font-mono text-fg-2">{duration.businessDays}</p>
-                      <p className="text-[10px] text-fg-muted">Business Days</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <button onClick={saveDuration} disabled={!duration} className={btnClass}>
-                Save to History
-              </button>
-            </>
-          )}
-
-          {tab === "add-subtract" && (
-            <>
-              <div className="space-y-2">
-                <label className={labelClass}>Base Date & Time</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="date"
-                    value={addDate}
-                    onChange={(e) => setAddDate(e.target.value)}
-                    className={inputClass}
-                  />
-                  <input
-                    type="time"
-                    value={addTime}
-                    onChange={(e) => setAddTime(e.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setAddMode("add")}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    addMode === "add"
-                      ? "bg-emerald-600 text-white"
-                      : "bg-raised text-fg-3 hover:bg-muted"
+        <Tabs.Root value={tab} onValueChange={(v) => setTab(v as Tab)}>
+          <Tabs.List className="flex gap-1.5 mb-6 justify-center">
+            {TABS.map((t) => {
+              const isActive = tab === t.key;
+              return (
+                <Tabs.Trigger
+                  key={t.key}
+                  value={t.key}
+                  className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    isActive ? "text-white" : "bg-raised text-fg-3 hover:bg-muted"
                   }`}
                 >
-                  + Add
-                </button>
-                <button
-                  onClick={() => setAddMode("subtract")}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    addMode === "subtract"
-                      ? "bg-red-600 text-white"
-                      : "bg-raised text-fg-3 hover:bg-muted"
-                  }`}
-                >
-                  − Subtract
-                </button>
-              </div>
+                  {isActive && (
+                    <motion.div
+                      layoutId="datetime-tab-active"
+                      className="absolute inset-0 bg-accent rounded-lg"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <t.Icon className="relative w-3 h-3" />
+                  <span className="relative">{t.label}</span>
+                </Tabs.Trigger>
+              );
+            })}
+          </Tabs.List>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-2">
-                  <label className={labelClass}>Amount</label>
-                  <input
-                    type="number"
-                    value={addAmount}
-                    onChange={(e) => setAddAmount(e.target.value)}
-                    min="0"
-                    className={inputClass + " font-mono text-right"}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className={labelClass}>Unit</label>
-                  <select
-                    value={addUnit}
-                    onChange={(e) => setAddUnit(e.target.value as typeof addUnit)}
-                    className={selectClass}
-                  >
-                    {UNITS.map((u) => (
-                      <option key={u} value={u}>
-                        {u.charAt(0).toUpperCase() + u.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {addResult && (
-                <div className="bg-raised rounded-xl p-4">
-                  <p className={labelClass}>Result</p>
-                  <p className="text-lg font-mono text-accent-fg mt-1">
-                    {addResult.toLocaleDateString("en-US", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                  <p className="text-sm font-mono text-fg-3 mt-0.5">
-                    {addResult.toLocaleTimeString("en-US", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
-                </div>
-              )}
-
-              <button onClick={saveAddResult} disabled={!addResult} className={btnClass}>
-                Save to History
-              </button>
-            </>
-          )}
-
-          {tab === "timezone" && (
-            <>
-              <div className="space-y-2">
-                <label className={labelClass}>Date & Time</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="date"
-                    value={tzDate}
-                    onChange={(e) => setTzDate(e.target.value)}
-                    className={inputClass}
-                  />
-                  <input
-                    type="time"
-                    value={tzTime}
-                    onChange={(e) => setTzTime(e.target.value)}
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className={labelClass}>From Timezone</label>
-                <select
-                  value={tzFrom}
-                  onChange={(e) => setTzFrom(Number(e.target.value))}
-                  className={selectClass}
-                >
-                  {TIMEZONES.map((tz, i) => (
-                    <option key={i} value={i}>
-                      {tz.label} ({tz.offset})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex justify-center">
-                <button
-                  onClick={() => {
-                    setTzFrom(tzTo);
-                    setTzTo(tzFrom);
-                  }}
-                  className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-all active:scale-90"
-                >
-                  ⇅
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <label className={labelClass}>To Timezone</label>
-                <select
-                  value={tzTo}
-                  onChange={(e) => setTzTo(Number(e.target.value))}
-                  className={selectClass}
-                >
-                  {TIMEZONES.map((tz, i) => (
-                    <option key={i} value={i}>
-                      {tz.label} ({tz.offset})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {tzResult && (
-                <div className="bg-raised rounded-xl p-4 space-y-3">
-                  <div>
-                    <p className="text-[10px] text-fg-muted font-medium uppercase tracking-wider">
-                      {TIMEZONES[tzFrom].label}
-                    </p>
-                    <p className="text-sm font-mono text-fg-2 mt-0.5">{tzResult.from}</p>
-                  </div>
-                  <div className="border-t border-line pt-3">
-                    <p className="text-[10px] text-fg-muted font-medium uppercase tracking-wider">
-                      {TIMEZONES[tzTo].label}
-                    </p>
-                    <p className="text-lg font-mono text-accent-fg mt-0.5">{tzResult.to}</p>
-                  </div>
-                </div>
-              )}
-
-              <button onClick={saveTzResult} disabled={!tzResult} className={btnClass}>
-                Save to History
-              </button>
-
-              <div className="border-t border-line-soft pt-4">
-                <p className="text-xs text-fg-faint mb-2 font-medium uppercase tracking-wider">
-                  World Clock
-                </p>
-                <div className="space-y-1.5 max-h-48 overflow-y-auto">
-                  {TIMEZONES.slice(0, 10).map((tz, i) => {
-                    const nowInTz = new Date().toLocaleTimeString("en-US", {
-                      timeZone: tz.iana,
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    });
-                    return (
-                      <div
-                        key={i}
-                        className="flex justify-between bg-raised/50 rounded-lg px-3 py-2"
-                      >
-                        <span className="text-xs text-fg-muted">{tz.label}</span>
-                        <span className="text-xs text-fg-2 font-mono">{nowInTz}</span>
+          <div className="bg-panel rounded-2xl p-5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={tab}
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.18 }}
+                className="space-y-4"
+              >
+                {tab === "duration" && (
+                  <>
+                    <div className="space-y-2">
+                      <label className={labelClass}>Start Date & Time</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={inputClass} />
+                        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} className={inputClass} />
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+                    </div>
+
+                    <div className="flex justify-center text-fg-faint">
+                      <ArrowUpDown className="w-5 h-5" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className={labelClass}>End Date & Time</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className={inputClass} />
+                        <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} className={inputClass} />
+                      </div>
+                    </div>
+
+                    {duration && (
+                      <div className="bg-raised rounded-xl p-4 space-y-3">
+                        <p className={labelClass}>Duration</p>
+                        <div className="flex flex-wrap gap-2">
+                          {duration.years > 0 && (
+                            <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">{duration.years}y</span>
+                          )}
+                          {duration.months > 0 && (
+                            <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">{duration.months}mo</span>
+                          )}
+                          <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">{duration.days}d</span>
+                          {(duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0) && (
+                            <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">
+                              {duration.hours}h {duration.minutes}m {duration.seconds}s
+                            </span>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-line">
+                          <div className="text-center">
+                            <p className="text-lg font-mono text-fg-2">{duration.totalDays}</p>
+                            <p className="text-[10px] text-fg-muted">Total Days</p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-lg font-mono text-fg-2">{duration.weeks}</p>
+                            <p className="text-[10px] text-fg-muted">Weeks</p>
+                          </div>
+                          <div className="text-center">
+                            <p className="text-lg font-mono text-fg-2">{duration.businessDays}</p>
+                            <p className="text-[10px] text-fg-muted">Business Days</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <button onClick={saveDuration} disabled={!duration} className={btnClass}>
+                      Save to History
+                    </button>
+                  </>
+                )}
+
+                {tab === "add-subtract" && (
+                  <>
+                    <div className="space-y-2">
+                      <label className={labelClass}>Base Date & Time</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="date" value={addDate} onChange={(e) => setAddDate(e.target.value)} className={inputClass} />
+                        <input type="time" value={addTime} onChange={(e) => setAddTime(e.target.value)} className={inputClass} />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setAddMode("add")}
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
+                          addMode === "add" ? "bg-emerald-600 text-white" : "bg-raised text-fg-3 hover:bg-muted"
+                        }`}
+                      >
+                        <Plus className="w-4 h-4" /> Add
+                      </button>
+                      <button
+                        onClick={() => setAddMode("subtract")}
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
+                          addMode === "subtract" ? "bg-red-600 text-white" : "bg-raised text-fg-3 hover:bg-muted"
+                        }`}
+                      >
+                        <Minus className="w-4 h-4" /> Subtract
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <label className={labelClass}>Amount</label>
+                        <input
+                          type="number"
+                          value={addAmount}
+                          onChange={(e) => setAddAmount(e.target.value)}
+                          min="0"
+                          className={inputClass + " font-mono text-right"}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className={labelClass}>Unit</label>
+                        <select
+                          value={addUnit}
+                          onChange={(e) => setAddUnit(e.target.value as typeof addUnit)}
+                          className={selectClass}
+                        >
+                          {UNITS.map((u) => (
+                            <option key={u} value={u}>
+                              {u.charAt(0).toUpperCase() + u.slice(1)}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {addResult && (
+                      <div className="bg-raised rounded-xl p-4">
+                        <p className={labelClass}>Result</p>
+                        <p className="text-lg font-mono text-accent-fg mt-1">
+                          {addResult.toLocaleDateString("en-US", {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </p>
+                        <p className="text-sm font-mono text-fg-3 mt-0.5">
+                          {addResult.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
+                    )}
+
+                    <button onClick={saveAddResult} disabled={!addResult} className={btnClass}>
+                      Save to History
+                    </button>
+                  </>
+                )}
+
+                {tab === "timezone" && (
+                  <>
+                    <div className="space-y-2">
+                      <label className={labelClass}>Date & Time</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="date" value={tzDate} onChange={(e) => setTzDate(e.target.value)} className={inputClass} />
+                        <input type="time" value={tzTime} onChange={(e) => setTzTime(e.target.value)} className={inputClass} />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className={labelClass}>From Timezone</label>
+                      <select
+                        value={tzFrom}
+                        onChange={(e) => setTzFrom(Number(e.target.value))}
+                        className={selectClass}
+                      >
+                        {TIMEZONES.map((tz, i) => (
+                          <option key={i} value={i}>
+                            {tz.label} ({tz.offset})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex justify-center">
+                      <motion.button
+                        onClick={() => {
+                          setTzFrom(tzTo);
+                          setTzTo(tzFrom);
+                        }}
+                        whileTap={{ rotate: 180, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-colors"
+                      >
+                        <ArrowUpDown className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className={labelClass}>To Timezone</label>
+                      <select
+                        value={tzTo}
+                        onChange={(e) => setTzTo(Number(e.target.value))}
+                        className={selectClass}
+                      >
+                        {TIMEZONES.map((tz, i) => (
+                          <option key={i} value={i}>
+                            {tz.label} ({tz.offset})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {tzResult && (
+                      <div className="bg-raised rounded-xl p-4 space-y-3">
+                        <div>
+                          <p className="text-[10px] text-fg-muted font-medium uppercase tracking-wider">
+                            {TIMEZONES[tzFrom].label}
+                          </p>
+                          <p className="text-sm font-mono text-fg-2 mt-0.5">{tzResult.from}</p>
+                        </div>
+                        <div className="border-t border-line pt-3">
+                          <p className="text-[10px] text-fg-muted font-medium uppercase tracking-wider">
+                            {TIMEZONES[tzTo].label}
+                          </p>
+                          <p className="text-lg font-mono text-accent-fg mt-0.5">{tzResult.to}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <button onClick={saveTzResult} disabled={!tzResult} className={btnClass}>
+                      Save to History
+                    </button>
+
+                    <div className="border-t border-line-soft pt-4">
+                      <p className="text-xs text-fg-faint mb-2 font-medium uppercase tracking-wider">World Clock</p>
+                      <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                        {TIMEZONES.slice(0, 10).map((tz, i) => {
+                          const nowInTz = new Date().toLocaleTimeString("en-US", {
+                            timeZone: tz.iana,
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          });
+                          return (
+                            <div key={i} className="flex justify-between bg-raised/50 rounded-lg px-3 py-2">
+                              <span className="text-xs text-fg-muted">{tz.label}</span>
+                              <span className="text-xs text-fg-2 font-mono">{nowInTz}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </Tabs.Root>
       </div>
     </div>
   );

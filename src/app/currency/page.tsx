@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpDown, RefreshCw } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useLiveRates } from "@/hooks/useLiveRates";
 import { CURRENCY_RATES, convertCurrency } from "@/utils/currencies";
@@ -72,9 +74,10 @@ export default function CurrencyPage() {
           <button
             onClick={refresh}
             disabled={status === "loading"}
-            className="text-[11px] text-accent-fg hover:text-accent-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="text-[11px] text-accent-fg hover:text-accent-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-1"
           >
-            {status === "loading" ? "Refreshing…" : "↻ Refresh"}
+            <RefreshCw className={`w-3 h-3 ${status === "loading" ? "animate-spin" : ""}`} />
+            {status === "loading" ? "Refreshing…" : "Refresh"}
           </button>
         </div>
 
@@ -112,12 +115,14 @@ export default function CurrencyPage() {
           {/* Swap */}
           <div className="flex items-center gap-3">
             <div className="flex-1 border-t border-line-soft" />
-            <button
+            <motion.button
               onClick={swap}
-              className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-all active:scale-90"
+              whileTap={{ rotate: 180, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-colors"
             >
-              ⇅
-            </button>
+              <ArrowUpDown className="w-4 h-4" />
+            </motion.button>
             <div className="flex-1 border-t border-line-soft" />
           </div>
 

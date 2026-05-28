@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export type AngleMode = "DEG" | "RAD";
 
 export interface HistoryEntry {
@@ -12,7 +14,7 @@ export type NumberBase = "DEC" | "HEX" | "OCT" | "BIN";
 
 export interface ConversionCategory {
   name: string;
-  icon: string;
+  icon: LucideIcon;
   units: ConversionUnit[];
 }
 

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Undo2, Redo2, Delete } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import type { NumberBase } from "@/types";
@@ -187,7 +189,18 @@ export default function ProgrammerPage() {
             {expression || " "}
           </div>
           <div className="text-right text-3xl font-mono font-light text-fg tracking-wider overflow-hidden text-ellipsis">
-            {display}
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={display + base}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.15 }}
+                className="inline-block"
+              >
+                {display}
+              </motion.span>
+            </AnimatePresence>
           </div>
         </div>
 
@@ -232,18 +245,18 @@ export default function ProgrammerPage() {
           <button
             onClick={handleUndo}
             disabled={!canUndo}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
             title="Undo (Ctrl+Z)"
           >
-            ↩ Undo
+            <Undo2 className="w-3 h-3" /> Undo
           </button>
           <button
             onClick={handleRedo}
             disabled={!canRedo}
-            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
+            className="px-2.5 py-1 rounded-lg text-xs font-medium transition-all bg-raised text-fg-3 hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1"
             title="Redo (Ctrl+Y)"
           >
-            Redo ↪
+            Redo <Redo2 className="w-3 h-3" />
           </button>
         </div>
 
@@ -335,8 +348,8 @@ export default function ProgrammerPage() {
           ))}
           <button
             onClick={() => setDisplay((prev) => (prev.length <= 1 ? "0" : prev.slice(0, -1)))}
-            className="h-12 text-sm font-medium bg-muted text-fg-2 hover:bg-dim transition-all active:scale-95"
-          >⌫</button>
+            className="h-12 text-sm font-medium bg-muted text-fg-2 hover:bg-dim transition-all active:scale-95 flex items-center justify-center"
+          ><Delete className="w-4 h-4" /></button>
           <button
             onClick={() => { setDisplay(formatToBase(bitwiseNot(currentDec), base)); setIsNewInput(true); }}
             className="h-12 text-sm font-medium bg-muted text-fg-2 hover:bg-dim transition-all active:scale-95"

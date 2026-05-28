@@ -33,6 +33,9 @@ Planned features, in order of implementation:
 - **Next.js 16** with App Router
 - **React 19** with TypeScript
 - **Tailwind CSS 4** for styling
+- **Framer Motion** for animations (page transitions, tab indicators, button feedback)
+- **Lucide React** for icons
+- **Radix UI** for accessible primitives (DropdownMenu, AlertDialog, Tabs)
 - **localStorage** for client-side persistence
 
 ## Getting Started

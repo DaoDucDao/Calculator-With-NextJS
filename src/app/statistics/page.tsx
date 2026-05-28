@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import * as Tabs from "@radix-ui/react-tabs";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChartBar, Dices, TrendingUp, type LucideIcon } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import {
   parseDataset,
@@ -15,10 +18,10 @@ import {
 
 type Tab = "descriptive" | "combinatorics" | "regression";
 
-const TABS: { key: Tab; label: string; icon: string }[] = [
-  { key: "descriptive", label: "Descriptive", icon: "📊" },
-  { key: "combinatorics", label: "Combinatorics", icon: "🎲" },
-  { key: "regression", label: "Regression", icon: "📈" },
+const TABS: { key: Tab; label: string; Icon: LucideIcon }[] = [
+  { key: "descriptive", label: "Descriptive", Icon: ChartBar },
+  { key: "combinatorics", label: "Combinatorics", Icon: Dices },
+  { key: "regression", label: "Regression", Icon: TrendingUp },
 ];
 
 export default function StatisticsPage() {
@@ -102,23 +105,42 @@ export default function StatisticsPage() {
           Statistics Calculator
         </h1>
 
-        <div className="flex gap-1.5 mb-6 justify-center">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                tab === t.key
-                  ? "bg-accent text-white"
-                  : "bg-raised text-fg-3 hover:bg-muted"
-              }`}
-            >
-              {t.icon} {t.label}
-            </button>
-          ))}
-        </div>
+        <Tabs.Root value={tab} onValueChange={(v) => setTab(v as Tab)}>
+          <Tabs.List className="flex gap-1.5 mb-6 justify-center">
+            {TABS.map((t) => {
+              const isActive = tab === t.key;
+              return (
+                <Tabs.Trigger
+                  key={t.key}
+                  value={t.key}
+                  className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    isActive ? "text-white" : "bg-raised text-fg-3 hover:bg-muted"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="stats-tab-active"
+                      className="absolute inset-0 bg-accent rounded-lg"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  <t.Icon className="relative w-3 h-3" />
+                  <span className="relative">{t.label}</span>
+                </Tabs.Trigger>
+              );
+            })}
+          </Tabs.List>
 
-        <div className="bg-panel rounded-2xl p-5 space-y-4">
+          <div className="bg-panel rounded-2xl p-5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={tab}
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -8 }}
+                transition={{ duration: 0.18 }}
+                className="space-y-4"
+              >
           {tab === "descriptive" && (
             <>
               <div className="space-y-2">
@@ -269,7 +291,10 @@ export default function StatisticsPage() {
               </button>
             </>
           )}
-        </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </Tabs.Root>
       </div>
     </div>
   );

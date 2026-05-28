@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { ArrowUpDown } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { CONVERSION_CATEGORIES } from "@/utils/conversions";
 
@@ -57,19 +59,29 @@ export default function ConverterPage() {
 
         {/* Category tabs */}
         <div className="flex flex-wrap gap-1.5 mb-6 justify-center">
-          {CONVERSION_CATEGORIES.map((cat, i) => (
-            <button
-              key={cat.name}
-              onClick={() => handleCategoryChange(i)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                i === categoryIndex
-                  ? "bg-accent text-white"
-                  : "bg-raised text-fg-3 hover:bg-muted"
-              }`}
-            >
-              {cat.icon} {cat.name}
-            </button>
-          ))}
+          {CONVERSION_CATEGORIES.map((cat, i) => {
+            const Icon = cat.icon;
+            const isActive = i === categoryIndex;
+            return (
+              <button
+                key={cat.name}
+                onClick={() => handleCategoryChange(i)}
+                className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 ${
+                  isActive ? "text-white" : "bg-raised text-fg-3 hover:bg-muted"
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="converter-cat-active"
+                    className="absolute inset-0 bg-accent rounded-lg"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <Icon className="relative w-3 h-3" />
+                <span className="relative">{cat.name}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="bg-panel rounded-2xl p-5 space-y-4">
@@ -100,12 +112,14 @@ export default function ConverterPage() {
 
           {/* Swap button */}
           <div className="flex justify-center">
-            <button
+            <motion.button
               onClick={swap}
-              className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-all active:scale-90"
+              whileTap={{ rotate: 180, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+              className="w-10 h-10 rounded-full bg-raised border border-line flex items-center justify-center text-fg-3 hover:text-accent-fg hover:border-accent/50 transition-colors"
             >
-              ⇅
-            </button>
+              <ArrowUpDown className="w-4 h-4" />
+            </motion.button>
           </div>
 
           {/* To */}
