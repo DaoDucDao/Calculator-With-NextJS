@@ -112,15 +112,25 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-button:not(:disabled),
-[role="tab"]:not([data-disabled]),
-[role="menuitem"]:not([data-disabled]),
-a {
+button,
+a,
+select,
+summary,
+label[for],
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+[role="switch"],
+[role="checkbox"],
+[role="radio"] {
   cursor: pointer;
 }
 
 button:disabled,
-[data-disabled] {
+[aria-disabled="true"],
+[data-disabled],
+[disabled] {
   cursor: not-allowed;
 }
 
