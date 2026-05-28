@@ -6,6 +6,8 @@ import { ArrowUpDown, RefreshCw } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useLiveRates } from "@/hooks/useLiveRates";
 import { CURRENCY_RATES, convertCurrency } from "@/utils/currencies";
+import HelpField from "@/components/HelpField";
+import HelpHint from "@/components/HelpHint";
 
 export default function CurrencyPage() {
   const { addEntry } = useHistory();
@@ -83,10 +85,11 @@ export default function CurrencyPage() {
 
         <div className="bg-panel rounded-2xl p-5 space-y-4">
           {/* From */}
-          <div className="space-y-2">
-            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
-              From
-            </label>
+          <HelpField
+            label="From"
+            title="From currency"
+            content="The currency you're converting from. Enter your amount in the input below — the result updates live."
+          >
             <select
               value={fromCode}
               onChange={(e) => setFromCode(e.target.value)}
@@ -110,7 +113,7 @@ export default function CurrencyPage() {
                 className="w-full bg-raised border border-line rounded-xl pl-10 pr-4 py-3 text-lg font-mono text-fg focus:outline-none focus:ring-2 focus:ring-ring transition-all text-right"
               />
             </div>
-          </div>
+          </HelpField>
 
           {/* Swap */}
           <div className="flex items-center gap-3">
@@ -127,10 +130,11 @@ export default function CurrencyPage() {
           </div>
 
           {/* To */}
-          <div className="space-y-2">
-            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
-              To
-            </label>
+          <HelpField
+            label="To"
+            title="To currency"
+            content="The currency you're converting into. The big green number shows the converted amount. Two-way rates are listed below."
+          >
             <select
               value={toCode}
               onChange={(e) => setToCode(e.target.value)}
@@ -148,7 +152,7 @@ export default function CurrencyPage() {
                 {result !== null ? formatNumber(result) : "—"}
               </span>
             </div>
-          </div>
+          </HelpField>
 
           {/* Exchange rate info */}
           <div className="bg-raised/50 rounded-xl px-4 py-3 space-y-1">
@@ -182,8 +186,12 @@ export default function CurrencyPage() {
         {/* All rates table */}
         <div className="mt-6 bg-panel rounded-2xl overflow-hidden">
           <div className="px-5 py-4 border-b border-line-soft flex items-center justify-between">
-            <h2 className="text-sm font-medium text-fg-3">
+            <h2 className="text-sm font-medium text-fg-3 flex items-center">
               All Rates from {fromCode}
+              <HelpHint
+                title="All rates table"
+                content="Your amount converted into every other supported currency at once. Use the Search box to filter by code or name. Click any row to set it as your To currency."
+              />
             </h2>
             <input
               type="text"

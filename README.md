@@ -16,18 +16,16 @@ A fully-featured, multi-mode calculator suite built with Next.js, React, and Typ
 - **Calculation History** - Persistent history with filtering by type, date grouping, and stats
 - **Export History** - Export calculations to CSV (for spreadsheets) or JSON (full data), respects active filter
 - **Built-in Tutorials** - Step-by-step popups walk through each calculator's features on first visit. Click "How to use this page" in the sidebar to replay anytime.
+- **PWA / Installable** - Installs to your home screen or desktop as a standalone app. Service worker pre-caches every route, so the app keeps working offline. Live currency rates always bypass the cache.
 
 ## Roadmap
 
 Planned features, in order of implementation:
 
 1. **Matrix Calculator** - Add, subtract, multiply matrices, determinants, inverses, eigenvalues
-2. **Equation Solver** - Linear, quadratic, cubic equations and systems of equations with step-by-step solutions
-3. **Calculus Tools** - Numerical differentiation, integration (trapezoidal/Simpson's rule), limits
-4. **LaTeX/MathJax Rendering** - Render expressions with proper mathematical notation
-5. **PWA Support** - Service worker + manifest for installable native-like app experience
-6. **Accessibility Audit** - Screen reader labels, ARIA roles, focus management, high-contrast mode
-7. **Unit Tests** - Test coverage for math utils, conversions, and programmer logic
+2. **Calculus Tools** - Numerical differentiation, integration (trapezoidal/Simpson's rule), limits
+3. **LaTeX/MathJax Rendering** - Render expressions with proper mathematical notation
+4. **Accessibility Audit** - Screen reader labels, ARIA roles, focus management, high-contrast mode
 
 ## Tech Stack
 

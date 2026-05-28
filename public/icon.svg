@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#18181b"/>
+  <rect x="72" y="72" width="368" height="104" rx="20" fill="#27272a"/>
+  <text x="420" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="72" font-weight="300" fill="#ffffff" text-anchor="end">256</text>
+  <g>
+    <rect x="72" y="208" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="168" y="208" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="264" y="208" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="360" y="208" width="80" height="80" rx="16" fill="#d97706"/>
+    <rect x="72" y="304" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="168" y="304" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="264" y="304" width="80" height="80" rx="16" fill="#27272a"/>
+    <rect x="360" y="304" width="80" height="80" rx="16" fill="#d97706"/>
+    <rect x="72" y="400" width="176" height="40" rx="16" fill="#27272a"/>
+    <rect x="264" y="400" width="80" height="40" rx="16" fill="#27272a"/>
+    <rect x="360" y="400" width="80" height="40" rx="16" fill="#f59e0b"/>
+  </g>
+</svg>

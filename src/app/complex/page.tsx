@@ -12,6 +12,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
+import HelpHint from "@/components/HelpHint";
+import HelpField from "@/components/HelpField";
 import {
   type Complex,
   add,
@@ -158,6 +160,10 @@ export default function ComplexPage() {
                   <>
                     <NumberRow
                       label="z₁"
+                      hint={{
+                        title: "First complex number",
+                        content: "Enter the real part (left) and imaginary part (right). For example, 3 + 4i means real=3, imag=4. Imaginary unit i = √(−1).",
+                      }}
                       a={aRe}
                       b={aIm}
                       onAChange={setARe}
@@ -171,6 +177,10 @@ export default function ComplexPage() {
                     />
                     <NumberRow
                       label="z₂"
+                      hint={{
+                        title: "Second complex number",
+                        content: "Enter the real part (left) and imaginary part (right). z₁ and z₂ are combined by the operation you choose below.",
+                      }}
                       a={bRe}
                       b={bIm}
                       onAChange={setBRe}
@@ -187,6 +197,10 @@ export default function ComplexPage() {
                   <>
                     <NumberRow
                       label="z₁"
+                      hint={{
+                        title: "First complex number (polar)",
+                        content: "Magnitude r (left) is the distance from origin. θ (right) is the angle in radians. For example, r=5, θ=0.927 ≈ 3 + 4i.",
+                      }}
                       a={aR}
                       b={aTheta}
                       onAChange={setAR}
@@ -200,6 +214,10 @@ export default function ComplexPage() {
                     />
                     <NumberRow
                       label="z₂"
+                      hint={{
+                        title: "Second complex number (polar)",
+                        content: "Magnitude r and angle θ in radians. Multiplication in polar form is easy: magnitudes multiply, angles add.",
+                      }}
                       a={bR}
                       b={bTheta}
                       onAChange={setBR}
@@ -242,8 +260,12 @@ export default function ComplexPage() {
             </div>
 
             {/* Result */}
-            <div className="bg-raised rounded-xl p-4 space-y-2">
-              <p className={labelClass}>Result</p>
+            <HelpField
+              label="Result"
+              title="Reading the result"
+              content="Top line: rectangular form (a + bi). Below: |z| (distance from origin), arg(z) in radians, and the polar form with angle in degrees."
+              className="bg-raised rounded-xl p-4 space-y-2"
+            >
               <AnimatePresence mode="popLayout">
                 <motion.div
                   key={format(result)}
@@ -268,7 +290,7 @@ export default function ComplexPage() {
                   </div>
                 </motion.div>
               </AnimatePresence>
-            </div>
+            </HelpField>
 
             <button
               onClick={saveBinary}
@@ -281,8 +303,12 @@ export default function ComplexPage() {
             <ComplexPlane z1={z1} z2={z2} result={result} />
 
             {/* Unary ops on z1 */}
-            <div className="border-t border-line-soft pt-4 space-y-2">
-              <p className={labelClass}>Functions of z₁</p>
+            <HelpField
+              label="Functions of z₁"
+              title="Single-input functions"
+              content="Each button shows the result of applying that function to z₁. Click a card to save just that result to history. Below the buttons, three read-only cards show |z₁|, arg(z₁), and the polar form."
+              className="border-t border-line-soft pt-4 space-y-2"
+            >
               <div className="grid grid-cols-3 gap-1.5">
                 {UNARY_OPS.map((u) => {
                   const out = u.fn(z1);
@@ -317,7 +343,7 @@ export default function ComplexPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </HelpField>
           </div>
         </Tabs.Root>
       </div>
@@ -327,6 +353,7 @@ export default function ComplexPage() {
 
 function NumberRow({
   label,
+  hint,
   a,
   b,
   onAChange,
@@ -339,6 +366,7 @@ function NumberRow({
   bSuffix,
 }: {
   label: string;
+  hint?: { title: string; content: string };
   a: string;
   b: string;
   onAChange: (s: string) => void;
@@ -352,7 +380,10 @@ function NumberRow({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className={labelClass}>{label}</label>
+      <label className={labelClass}>
+        {label}
+        {hint && <HelpHint title={hint.title} content={hint.content} />}
+      </label>
       <div className="flex items-center gap-2">
         <input
           type="number"
@@ -404,10 +435,12 @@ function ComplexPlane({ z1, z2, result }: { z1: Complex; z2: Complex; result: Co
   ].filter((p) => isFinite(p.z.re) && isFinite(p.z.im));
 
   return (
-    <div className="border-t border-line-soft pt-4">
-      <p className="text-xs text-fg-muted font-medium uppercase tracking-wider mb-2">
-        Complex Plane
-      </p>
+    <HelpField
+      label="Complex Plane"
+      title="What you're seeing"
+      content="The horizontal axis is the real part (Re), vertical is imaginary (Im). z₁ (amber), z₂ (cyan), and the result (accent) are drawn as vectors from the origin. Axes auto-scale to fit."
+      className="border-t border-line-soft pt-4 space-y-2"
+    >
       <div className="flex justify-center">
         <svg width={size} height={size} className="bg-raised/30 rounded-xl">
           {/* axes */}
@@ -475,6 +508,6 @@ function ComplexPlane({ z1, z2, result }: { z1: Complex; z2: Complex; result: Co
           })}
         </svg>
       </div>
-    </div>
+    </HelpField>
   );
 }

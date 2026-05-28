@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
 import PageTransition from "@/components/PageTransition";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TutorialProvider } from "@/components/Tutorial";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +20,23 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CalcSuite - Calculator Toolkit",
   description:
-    "Scientific calculator, programmer calculator, unit converter, and currency converter built with Next.js",
+    "Scientific, programmer, unit, currency, date/time, statistics, and complex number calculators in one installable PWA.",
+  applicationName: "CalcSuite",
+  appleWebApp: {
+    capable: true,
+    title: "CalcSuite",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -42,6 +59,7 @@ export default function RootLayout({
             </main>
           </TutorialProvider>
         </ThemeProvider>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

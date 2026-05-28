@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Undo2, Redo2, Delete } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
+import HelpHint from "@/components/HelpHint";
 import { useUndoRedo } from "@/hooks/useUndoRedo";
 import type { NumberBase } from "@/types";
 
@@ -221,7 +222,13 @@ export default function ProgrammerPage() {
         {/* Bit visualization */}
         <div className="bg-panel px-5 pb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] text-fg-faint uppercase tracking-wider">Bits</span>
+            <span className="text-[10px] text-fg-faint uppercase tracking-wider flex items-center">
+              Bits
+              <HelpHint
+                title="Bit width"
+                content="How many bits to use for the binary representation. 8/16/32/64-bit affects how negative numbers wrap and how the binary string is padded."
+              />
+            </span>
             <div className="flex gap-1">
               {([8, 16, 32, 64] as const).map((w) => (
                 <button

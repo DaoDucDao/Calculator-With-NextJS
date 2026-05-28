@@ -5,6 +5,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { Timer, CalendarPlus, Globe, ArrowUpDown, Plus, Minus, type LucideIcon } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
+import HelpField from "@/components/HelpField";
 import {
   TIMEZONES,
   calculateDuration,
@@ -160,29 +161,39 @@ export default function DateTimePage() {
               >
                 {tab === "duration" && (
                   <>
-                    <div className="space-y-2">
-                      <label className={labelClass}>Start Date & Time</label>
+                    <HelpField
+                      label="Start Date & Time"
+                      title="Start point"
+                      content="The earlier moment. Pick the date on the left and the time on the right. If start is after end, the calculator still computes the correct positive duration."
+                    >
                       <div className="grid grid-cols-2 gap-2">
                         <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={inputClass} />
                         <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} className={inputClass} />
                       </div>
-                    </div>
+                    </HelpField>
 
                     <div className="flex justify-center text-fg-faint">
                       <ArrowUpDown className="w-5 h-5" />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className={labelClass}>End Date & Time</label>
+                    <HelpField
+                      label="End Date & Time"
+                      title="End point"
+                      content="The later moment. The Duration result below shows the gap as years/months/days/h/m/s plus totals (total days, weeks, business days)."
+                    >
                       <div className="grid grid-cols-2 gap-2">
                         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className={inputClass} />
                         <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} className={inputClass} />
                       </div>
-                    </div>
+                    </HelpField>
 
                     {duration && (
-                      <div className="bg-raised rounded-xl p-4 space-y-3">
-                        <p className={labelClass}>Duration</p>
+                      <HelpField
+                        label="Duration"
+                        title="What this means"
+                        content="The big tags show the calendar-aware breakdown (e.g. '1y 2mo 3d'). Below them: total days (just subtracts dates), weeks (totalDays ÷ 7), and business days (excludes Saturdays and Sundays)."
+                        className="bg-raised rounded-xl p-4 space-y-3"
+                      >
                         <div className="flex flex-wrap gap-2">
                           {duration.years > 0 && (
                             <span className="bg-accent/15 text-accent-fg px-3 py-1 rounded-lg text-sm font-mono">{duration.years}y</span>
@@ -211,7 +222,7 @@ export default function DateTimePage() {
                             <p className="text-[10px] text-fg-muted">Business Days</p>
                           </div>
                         </div>
-                      </div>
+                      </HelpField>
                     )}
 
                     <button onClick={saveDuration} disabled={!duration} className={btnClass}>
@@ -222,13 +233,16 @@ export default function DateTimePage() {
 
                 {tab === "add-subtract" && (
                   <>
-                    <div className="space-y-2">
-                      <label className={labelClass}>Base Date & Time</label>
+                    <HelpField
+                      label="Base Date & Time"
+                      title="Base date"
+                      content="The starting point you'll add or subtract from. Pick Add/Subtract below, then set how much."
+                    >
                       <div className="grid grid-cols-2 gap-2">
                         <input type="date" value={addDate} onChange={(e) => setAddDate(e.target.value)} className={inputClass} />
                         <input type="time" value={addTime} onChange={(e) => setAddTime(e.target.value)} className={inputClass} />
                       </div>
-                    </div>
+                    </HelpField>
 
                     <div className="flex gap-2">
                       <button
@@ -250,8 +264,11 @@ export default function DateTimePage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="space-y-2">
-                        <label className={labelClass}>Amount</label>
+                      <HelpField
+                        label="Amount"
+                        title="How much to add/subtract"
+                        content="An integer count of the unit on the right. For example, 90 with unit 'days' offsets the base date by ±90 days."
+                      >
                         <input
                           type="number"
                           value={addAmount}
@@ -259,9 +276,12 @@ export default function DateTimePage() {
                           min="0"
                           className={inputClass + " font-mono text-right"}
                         />
-                      </div>
-                      <div className="space-y-2">
-                        <label className={labelClass}>Unit</label>
+                      </HelpField>
+                      <HelpField
+                        label="Unit"
+                        title="Time unit"
+                        content="What the Amount is measured in: years, months, weeks, days, hours, or minutes. Calendar-aware — adding 1 month to Jan 31 gives Feb 28/29."
+                      >
                         <select
                           value={addUnit}
                           onChange={(e) => setAddUnit(e.target.value as typeof addUnit)}
@@ -273,12 +293,16 @@ export default function DateTimePage() {
                             </option>
                           ))}
                         </select>
-                      </div>
+                      </HelpField>
                     </div>
 
                     {addResult && (
-                      <div className="bg-raised rounded-xl p-4">
-                        <p className={labelClass}>Result</p>
+                      <HelpField
+                        label="Result"
+                        title="Computed date"
+                        content="The base date shifted by the chosen amount and unit. Hit 'Save to History' to record it."
+                        className="bg-raised rounded-xl p-4 space-y-1"
+                      >
                         <p className="text-lg font-mono text-accent-fg mt-1">
                           {addResult.toLocaleDateString("en-US", {
                             weekday: "short",
@@ -294,7 +318,7 @@ export default function DateTimePage() {
                             hour12: true,
                           })}
                         </p>
-                      </div>
+                      </HelpField>
                     )}
 
                     <button onClick={saveAddResult} disabled={!addResult} className={btnClass}>
@@ -305,16 +329,22 @@ export default function DateTimePage() {
 
                 {tab === "timezone" && (
                   <>
-                    <div className="space-y-2">
-                      <label className={labelClass}>Date & Time</label>
+                    <HelpField
+                      label="Date & Time"
+                      title="The moment to convert"
+                      content="A specific date and time, interpreted in the 'From Timezone' selected below. The same moment is then displayed in the 'To Timezone'."
+                    >
                       <div className="grid grid-cols-2 gap-2">
                         <input type="date" value={tzDate} onChange={(e) => setTzDate(e.target.value)} className={inputClass} />
                         <input type="time" value={tzTime} onChange={(e) => setTzTime(e.target.value)} className={inputClass} />
                       </div>
-                    </div>
+                    </HelpField>
 
-                    <div className="space-y-2">
-                      <label className={labelClass}>From Timezone</label>
+                    <HelpField
+                      label="From Timezone"
+                      title="Source timezone"
+                      content="What timezone the date/time above is in. The list shows the standard UTC offset (DST is handled automatically by the IANA database)."
+                    >
                       <select
                         value={tzFrom}
                         onChange={(e) => setTzFrom(Number(e.target.value))}
@@ -326,7 +356,7 @@ export default function DateTimePage() {
                           </option>
                         ))}
                       </select>
-                    </div>
+                    </HelpField>
 
                     <div className="flex justify-center">
                       <motion.button
@@ -342,8 +372,11 @@ export default function DateTimePage() {
                       </motion.button>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className={labelClass}>To Timezone</label>
+                    <HelpField
+                      label="To Timezone"
+                      title="Target timezone"
+                      content="The timezone you want to see the same moment in. The result below shows both: the From moment and the same moment in the To zone."
+                    >
                       <select
                         value={tzTo}
                         onChange={(e) => setTzTo(Number(e.target.value))}
@@ -355,7 +388,7 @@ export default function DateTimePage() {
                           </option>
                         ))}
                       </select>
-                    </div>
+                    </HelpField>
 
                     {tzResult && (
                       <div className="bg-raised rounded-xl p-4 space-y-3">
@@ -378,8 +411,12 @@ export default function DateTimePage() {
                       Save to History
                     </button>
 
-                    <div className="border-t border-line-soft pt-4">
-                      <p className="text-xs text-fg-faint mb-2 font-medium uppercase tracking-wider">World Clock</p>
+                    <HelpField
+                      label="World Clock"
+                      title="Live clock"
+                      content="The current time right now in 10 major cities. Useful for quick reference while planning meetings. Not interactive — just a snapshot when the page loads."
+                      className="border-t border-line-soft pt-4 space-y-2"
+                    >
                       <div className="space-y-1.5 max-h-48 overflow-y-auto">
                         {TIMEZONES.slice(0, 10).map((tz, i) => {
                           const nowInTz = new Date().toLocaleTimeString("en-US", {
@@ -396,7 +433,7 @@ export default function DateTimePage() {
                           );
                         })}
                       </div>
-                    </div>
+                    </HelpField>
                   </>
                 )}
               </motion.div>

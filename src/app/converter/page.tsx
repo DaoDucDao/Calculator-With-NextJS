@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowUpDown } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { CONVERSION_CATEGORIES } from "@/utils/conversions";
+import HelpField from "@/components/HelpField";
 
 export default function ConverterPage() {
   const { addEntry } = useHistory();
@@ -86,10 +87,11 @@ export default function ConverterPage() {
 
         <div className="bg-panel rounded-2xl p-5 space-y-4">
           {/* From */}
-          <div className="space-y-2">
-            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
-              From
-            </label>
+          <HelpField
+            label="From"
+            title="From unit"
+            content="The unit you're starting with. Pick from the dropdown, then type your value in the input below."
+          >
             <select
               value={fromIndex}
               onChange={(e) => setFromIndex(Number(e.target.value))}
@@ -108,7 +110,7 @@ export default function ConverterPage() {
               placeholder="Enter value"
               className={inputClass}
             />
-          </div>
+          </HelpField>
 
           {/* Swap button */}
           <div className="flex justify-center">
@@ -123,10 +125,11 @@ export default function ConverterPage() {
           </div>
 
           {/* To */}
-          <div className="space-y-2">
-            <label className="text-xs text-fg-muted font-medium uppercase tracking-wider">
-              To
-            </label>
+          <HelpField
+            label="To"
+            title="To unit"
+            content="The unit you want to convert into. The converted value appears below in green and updates instantly as you type."
+          >
             <select
               value={toIndex}
               onChange={(e) => setToIndex(Number(e.target.value))}
@@ -144,7 +147,7 @@ export default function ConverterPage() {
               </span>
               <span className="text-sm text-fg-muted ml-2">{toUnit.symbol}</span>
             </div>
-          </div>
+          </HelpField>
 
           {/* Save to history */}
           <button
@@ -156,10 +159,12 @@ export default function ConverterPage() {
           </button>
 
           {/* Quick reference */}
-          <div className="border-t border-line-soft pt-4">
-            <p className="text-xs text-fg-faint mb-2 font-medium uppercase tracking-wider">
-              Quick Reference
-            </p>
+          <HelpField
+            label="Quick Reference"
+            title="Quick reference"
+            content="Your value converted to up to six other units in the same category — gives you a fast overview without changing the To dropdown."
+            className="border-t border-line-soft pt-4 space-y-2"
+          >
             <div className="grid grid-cols-2 gap-1.5">
               {category.units
                 .filter((_, i) => i !== fromIndex)
@@ -180,7 +185,7 @@ export default function ConverterPage() {
                   );
                 })}
             </div>
-          </div>
+          </HelpField>
         </div>
       </div>
     </div>

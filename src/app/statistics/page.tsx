@@ -5,6 +5,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChartBar, Dices, TrendingUp, type LucideIcon } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
+import HelpField from "@/components/HelpField";
 import {
   parseDataset,
   parsePairs,
@@ -143,10 +144,11 @@ export default function StatisticsPage() {
               >
           {tab === "descriptive" && (
             <>
-              <div className="space-y-2">
-                <label className={labelClass}>
-                  Dataset (comma or space separated)
-                </label>
+              <HelpField
+                label="Dataset (comma or space separated)"
+                title="Input format"
+                content="Paste numbers separated by commas, spaces, or newlines (e.g. '1, 2, 3' or '1 2 3'). Non-numeric entries are silently ignored."
+              >
                 <textarea
                   value={dataInput}
                   onChange={(e) => setDataInput(e.target.value)}
@@ -157,7 +159,7 @@ export default function StatisticsPage() {
                 <p className="text-[10px] text-fg-faint">
                   {dataset.length} valid number{dataset.length !== 1 ? "s" : ""} parsed
                 </p>
-              </div>
+              </HelpField>
 
               {stats && (
                 <div className="bg-raised rounded-xl p-4 space-y-3">
@@ -199,8 +201,11 @@ export default function StatisticsPage() {
           {tab === "combinatorics" && (
             <>
               <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <label className={labelClass}>n</label>
+                <HelpField
+                  label="n"
+                  title="Total items (n)"
+                  content="The total number of things you're choosing from. Must be a non-negative integer. Used by factorial n!, P(n,r), and C(n,r)."
+                >
                   <input
                     type="number"
                     value={n}
@@ -208,9 +213,12 @@ export default function StatisticsPage() {
                     min="0"
                     className={inputClass + " font-mono text-right"}
                   />
-                </div>
-                <div className="space-y-2">
-                  <label className={labelClass}>r</label>
+                </HelpField>
+                <HelpField
+                  label="r"
+                  title="Chosen count (r)"
+                  content="How many you're picking. Must be ≤ n. P(n,r) counts ordered arrangements; C(n,r) counts unordered selections."
+                >
                   <input
                     type="number"
                     value={r}
@@ -218,7 +226,7 @@ export default function StatisticsPage() {
                     min="0"
                     className={inputClass + " font-mono text-right"}
                   />
-                </div>
+                </HelpField>
               </div>
 
               <div className="space-y-3">
@@ -249,10 +257,11 @@ export default function StatisticsPage() {
 
           {tab === "regression" && (
             <>
-              <div className="space-y-2">
-                <label className={labelClass}>
-                  Pairs (x, y per line)
-                </label>
+              <HelpField
+                label="Pairs (x, y per line)"
+                title="Input format"
+                content="One data point per line, with x and y separated by a comma or space (e.g. '1, 2' on each line). Need at least 2 pairs with some variation in x to compute a regression."
+              >
                 <textarea
                   value={pairsInput}
                   onChange={(e) => setPairsInput(e.target.value)}
@@ -263,7 +272,7 @@ export default function StatisticsPage() {
                 <p className="text-[10px] text-fg-faint">
                   {pairs.x.length} valid pair{pairs.x.length !== 1 ? "s" : ""} parsed
                 </p>
-              </div>
+              </HelpField>
 
               {regression ? (
                 <div className="bg-raised rounded-xl p-4 space-y-3">
