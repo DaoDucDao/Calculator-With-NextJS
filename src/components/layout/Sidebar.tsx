@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/converter", label: "Unit Converter", icon: "📏" },
   { href: "/currency", label: "Currency", icon: "💱" },
   { href: "/datetime", label: "Date / Time", icon: "📅" },
+  { href: "/statistics", label: "Statistics", icon: "📊" },
   { href: "/history", label: "History", icon: "📜" },
 ];
 

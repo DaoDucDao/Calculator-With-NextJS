@@ -2,20 +2,33 @@
 
 import { useState } from "react";
 import { useHistory } from "@/hooks/useHistory";
+import { entriesToCSV, entriesToJSON, downloadFile, timestampedFilename } from "@/utils/export";
 
 const TYPE_LABELS = {
   scientific: { label: "Scientific", color: "text-amber-400 bg-amber-400/10" },
   programmer: { label: "Programmer", color: "text-cyan-400 bg-cyan-400/10" },
   converter: { label: "Converter", color: "text-emerald-400 bg-emerald-400/10" },
   datetime: { label: "Date/Time", color: "text-rose-400 bg-rose-400/10" },
+  statistics: { label: "Statistics", color: "text-violet-400 bg-violet-400/10" },
 };
 
 export default function HistoryPage() {
   const { entries, loaded, clearHistory, deleteEntry } = useHistory();
   const [filter, setFilter] = useState<string>("all");
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   const filtered = filter === "all" ? entries : entries.filter((e) => e.type === filter);
+
+  const exportCSV = () => {
+    downloadFile(entriesToCSV(filtered), timestampedFilename(`calc-history-${filter}`, "csv"), "text/csv");
+    setShowExportMenu(false);
+  };
+
+  const exportJSON = () => {
+    downloadFile(entriesToJSON(filtered), timestampedFilename(`calc-history-${filter}`, "json"), "application/json");
+    setShowExportMenu(false);
+  };
 
   const grouped = filtered.reduce(
     (acc, entry) => {
@@ -50,9 +63,9 @@ export default function HistoryPage() {
           </p>
         </div>
         {entries.length > 0 && (
-          <div className="relative">
+          <div className="flex items-center gap-2">
             {showClearConfirm ? (
-              <div className="flex items-center gap-2">
+              <>
                 <span className="text-xs text-fg-3">Clear all?</span>
                 <button
                   onClick={() => {
@@ -69,14 +82,52 @@ export default function HistoryPage() {
                 >
                   No
                 </button>
-              </div>
+              </>
             ) : (
-              <button
-                onClick={() => setShowClearConfirm(true)}
-                className="px-4 py-2 rounded-xl bg-raised text-fg-3 text-sm hover:bg-muted border border-line transition-colors"
-              >
-                Clear All
-              </button>
+              <>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowExportMenu((v) => !v)}
+                    disabled={filtered.length === 0}
+                    className="px-4 py-2 rounded-xl bg-raised text-fg-3 text-sm hover:bg-muted border border-line transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Export ▾
+                  </button>
+                  {showExportMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowExportMenu(false)}
+                      />
+                      <div className="absolute right-0 mt-1 w-44 bg-panel border border-line rounded-xl shadow-lg overflow-hidden z-20">
+                        <div className="px-3 py-2 text-[10px] text-fg-faint uppercase tracking-wider border-b border-line-soft">
+                          {filtered.length} entr{filtered.length === 1 ? "y" : "ies"}
+                        </div>
+                        <button
+                          onClick={exportCSV}
+                          className="w-full text-left px-4 py-2.5 text-sm text-fg-2 hover:bg-raised transition-colors flex items-center justify-between"
+                        >
+                          <span>CSV</span>
+                          <span className="text-[10px] text-fg-faint">spreadsheet</span>
+                        </button>
+                        <button
+                          onClick={exportJSON}
+                          className="w-full text-left px-4 py-2.5 text-sm text-fg-2 hover:bg-raised transition-colors flex items-center justify-between border-t border-line-soft"
+                        >
+                          <span>JSON</span>
+                          <span className="text-[10px] text-fg-faint">full data</span>
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={() => setShowClearConfirm(true)}
+                  className="px-4 py-2 rounded-xl bg-raised text-fg-3 text-sm hover:bg-muted border border-line transition-colors"
+                >
+                  Clear All
+                </button>
+              </>
             )}
           </div>
         )}
@@ -90,6 +141,7 @@ export default function HistoryPage() {
           { key: "programmer", label: "Programmer" },
           { key: "converter", label: "Converter" },
           { key: "datetime", label: "Date/Time" },
+          { key: "statistics", label: "Statistics" },
         ].map((f) => (
           <button
             key={f.key}
@@ -172,7 +224,7 @@ export default function HistoryPage() {
 
       {/* Stats */}
       {entries.length > 0 && (
-        <div className="mt-6 grid grid-cols-4 gap-3">
+        <div className="mt-6 grid grid-cols-5 gap-3">
           {[
             {
               label: "Scientific",
@@ -193,6 +245,11 @@ export default function HistoryPage() {
               label: "Date/Time",
               count: entries.filter((e) => e.type === "datetime").length,
               color: "text-rose-400",
+            },
+            {
+              label: "Statistics",
+              count: entries.filter((e) => e.type === "statistics").length,
+              color: "text-violet-400",
             },
           ].map((s) => (
             <div

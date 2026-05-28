@@ -2,10 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { useHistory } from "@/hooks/useHistory";
+import { useLiveRates } from "@/hooks/useLiveRates";
 import { CURRENCY_RATES, convertCurrency } from "@/utils/currencies";
 
 export default function CurrencyPage() {
   const { addEntry } = useHistory();
+  const { rates: liveRates, fetchedAt, status, error, refresh } = useLiveRates();
   const [fromCode, setFromCode] = useState("USD");
   const [toCode, setToCode] = useState("VND");
   const [amount, setAmount] = useState("1");
@@ -14,14 +16,14 @@ export default function CurrencyPage() {
   const result = useMemo(() => {
     const num = parseFloat(amount);
     if (isNaN(num)) return null;
-    return convertCurrency(num, fromCode, toCode);
-  }, [amount, fromCode, toCode]);
+    return convertCurrency(num, fromCode, toCode, liveRates ?? undefined);
+  }, [amount, fromCode, toCode, liveRates]);
 
   const fromCurrency = CURRENCY_RATES.find((c) => c.code === fromCode)!;
   const toCurrency = CURRENCY_RATES.find((c) => c.code === toCode)!;
 
-  const rate = convertCurrency(1, fromCode, toCode);
-  const inverseRate = convertCurrency(1, toCode, fromCode);
+  const rate = convertCurrency(1, fromCode, toCode, liveRates ?? undefined);
+  const inverseRate = convertCurrency(1, toCode, fromCode, liveRates ?? undefined);
 
   const swap = () => {
     setFromCode(toCode);
@@ -45,9 +47,11 @@ export default function CurrencyPage() {
           c.name.toLowerCase().includes(search.toLowerCase()))
     ).map((c) => ({
       ...c,
-      converted: convertCurrency(num, fromCode, c.code),
+      converted: convertCurrency(num, fromCode, c.code, liveRates ?? undefined),
     }));
-  }, [amount, fromCode, search]);
+  }, [amount, fromCode, search, liveRates]);
+
+  const statusInfo = getStatusInfo(status, fetchedAt, error);
 
   const selectClass =
     "w-full bg-raised border border-line rounded-xl px-4 py-3 text-sm text-fg-2 focus:outline-none focus:ring-2 focus:ring-ring transition-all";
@@ -55,9 +59,24 @@ export default function CurrencyPage() {
   return (
     <div className="flex flex-col items-center min-h-screen p-4 py-8">
       <div className="w-full max-w-md">
-        <h1 className="text-center text-2xl font-bold mb-6 text-fg-2">
+        <h1 className="text-center text-2xl font-bold mb-2 text-fg-2">
           Currency Converter
         </h1>
+
+        {/* Status banner */}
+        <div className="flex items-center justify-between mb-4 px-1">
+          <div className="flex items-center gap-2 text-[11px]">
+            <span className={`w-2 h-2 rounded-full ${statusInfo.dotColor}`} />
+            <span className="text-fg-muted">{statusInfo.message}</span>
+          </div>
+          <button
+            onClick={refresh}
+            disabled={status === "loading"}
+            className="text-[11px] text-accent-fg hover:text-accent-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {status === "loading" ? "Refreshing…" : "↻ Refresh"}
+          </button>
+        </div>
 
         <div className="bg-panel rounded-2xl p-5 space-y-4">
           {/* From */}
@@ -193,7 +212,7 @@ export default function CurrencyPage() {
         </div>
 
         <p className="text-center text-[10px] text-fg-faint mt-3">
-          Rates are approximate and for reference only
+          {statusInfo.disclaimer}
         </p>
       </div>
     </div>
@@ -205,4 +224,55 @@ function formatNumber(n: number): string {
     return n.toLocaleString("en-US", { maximumFractionDigits: 2 });
   }
   return parseFloat(n.toPrecision(6)).toString();
+}
+
+function getStatusInfo(
+  status: "loading" | "live" | "cached" | "stale" | "fallback",
+  fetchedAt: number | null,
+  error: string | null
+) {
+  const timeAgo = fetchedAt ? formatTimeAgo(Date.now() - fetchedAt) : "never";
+  switch (status) {
+    case "loading":
+      return {
+        dotColor: "bg-amber-400 animate-pulse",
+        message: "Fetching live rates…",
+        disclaimer: "Loading exchange rates…",
+      };
+    case "live":
+      return {
+        dotColor: "bg-emerald-400",
+        message: "Live rates · just now",
+        disclaimer: "Live rates from exchangerate-api.com",
+      };
+    case "cached":
+      return {
+        dotColor: "bg-emerald-400",
+        message: `Cached · ${timeAgo} ago`,
+        disclaimer: "Live rates from exchangerate-api.com (cached)",
+      };
+    case "stale":
+      return {
+        dotColor: "bg-amber-400",
+        message: `Stale cache · ${timeAgo} ago, refreshing…`,
+        disclaimer: "Refreshing exchange rates…",
+      };
+    case "fallback":
+      return {
+        dotColor: "bg-red-400",
+        message: `Offline · using static rates${error ? ` (${error})` : ""}`,
+        disclaimer: "Static fallback rates — not current",
+      };
+  }
+}
+
+function formatTimeAgo(ms: number): string {
+  const sec = Math.floor(ms / 1000);
+  if (sec < 60) return `${sec}s ago`;
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const d = Math.floor(hr / 24);
+  return `${d}d ago`;
 }

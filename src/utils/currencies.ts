@@ -34,11 +34,14 @@ export const CURRENCY_RATES: CurrencyRate[] = [
 export function convertCurrency(
   amount: number,
   fromCode: string,
-  toCode: string
+  toCode: string,
+  liveRates?: Record<string, number>
 ): number {
   const from = CURRENCY_RATES.find((c) => c.code === fromCode);
   const to = CURRENCY_RATES.find((c) => c.code === toCode);
   if (!from || !to) return 0;
-  const usdAmount = amount / from.rate;
-  return usdAmount * to.rate;
+  const fromRate = liveRates?.[fromCode] ?? from.rate;
+  const toRate = liveRates?.[toCode] ?? to.rate;
+  const usdAmount = amount / fromRate;
+  return usdAmount * toRate;
 }
