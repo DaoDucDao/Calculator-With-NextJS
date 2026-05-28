@@ -25,12 +25,12 @@ const TYPE_LABELS = {
 };
 
 const FILTERS = [
-  { key: "all", label: "All" },
-  { key: "scientific", label: "Scientific" },
-  { key: "programmer", label: "Programmer" },
-  { key: "converter", label: "Converter" },
-  { key: "datetime", label: "Date/Time" },
-  { key: "statistics", label: "Statistics" },
+  { key: "all", label: "All", color: "text-fg" },
+  { key: "scientific", label: "Scientific", color: "text-amber-400" },
+  { key: "programmer", label: "Programmer", color: "text-cyan-400" },
+  { key: "converter", label: "Converter", color: "text-emerald-400" },
+  { key: "datetime", label: "Date/Time", color: "text-rose-400" },
+  { key: "statistics", label: "Statistics", color: "text-violet-400" },
 ];
 
 export default function HistoryPage() {
@@ -164,26 +164,35 @@ export default function HistoryPage() {
         )}
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex gap-1.5 mb-6">
+      {/* Filter + stats combined */}
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
         {FILTERS.map((f) => {
           const isActive = filter === f.key;
+          const count =
+            f.key === "all"
+              ? entries.length
+              : entries.filter((e) => e.type === f.key).length;
           return (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                isActive ? "text-white" : "bg-raised text-fg-3 hover:bg-muted"
+              className={`relative px-3 py-2.5 rounded-xl text-center transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                isActive ? "bg-panel" : "bg-panel/60 hover:bg-panel"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="history-filter-active"
-                  className="absolute inset-0 bg-accent rounded-lg"
+                  className="absolute inset-0 ring-2 ring-accent rounded-xl"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
-              <span className="relative">{f.label}</span>
+              <span className={`relative block text-xl font-bold ${f.color}`}>
+                {count}
+              </span>
+              <span className="relative block text-[10px] text-fg-muted mt-0.5">
+                {f.label}
+              </span>
             </button>
           );
         })}
@@ -261,27 +270,6 @@ export default function HistoryPage() {
         </div>
       )}
 
-      {/* Stats */}
-      {entries.length > 0 && (
-        <div className="mt-6 grid grid-cols-5 gap-3">
-          {[
-            { label: "Scientific", count: entries.filter((e) => e.type === "scientific").length, color: "text-amber-400" },
-            { label: "Programmer", count: entries.filter((e) => e.type === "programmer").length, color: "text-cyan-400" },
-            { label: "Conversions", count: entries.filter((e) => e.type === "converter").length, color: "text-emerald-400" },
-            { label: "Date/Time", count: entries.filter((e) => e.type === "datetime").length, color: "text-rose-400" },
-            { label: "Statistics", count: entries.filter((e) => e.type === "statistics").length, color: "text-violet-400" },
-          ].map((s) => (
-            <motion.div
-              key={s.label}
-              whileHover={{ y: -2 }}
-              className="bg-panel rounded-xl px-4 py-3 text-center"
-            >
-              <p className={`text-xl font-bold ${s.color}`}>{s.count}</p>
-              <p className="text-[10px] text-fg-muted mt-0.5">{s.label}</p>
-            </motion.div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
