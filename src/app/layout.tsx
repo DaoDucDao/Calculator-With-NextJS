@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/layout/Sidebar";
 import PageTransition from "@/components/PageTransition";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { TutorialProvider } from "@/components/Tutorial";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +35,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex">
         <ThemeProvider>
-          <Sidebar />
-          <main className="flex-1 ml-56 min-h-screen">
-            <PageTransition>{children}</PageTransition>
-          </main>
+          <TutorialProvider>
+            <Sidebar />
+            <main className="flex-1 ml-56 min-h-screen">
+              <PageTransition>{children}</PageTransition>
+            </main>
+          </TutorialProvider>
         </ThemeProvider>
       </body>
     </html>

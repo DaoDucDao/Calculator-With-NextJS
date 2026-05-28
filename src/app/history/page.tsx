@@ -22,6 +22,7 @@ const TYPE_LABELS = {
   converter: { label: "Converter", color: "text-emerald-400 bg-emerald-400/10" },
   datetime: { label: "Date/Time", color: "text-rose-400 bg-rose-400/10" },
   statistics: { label: "Statistics", color: "text-violet-400 bg-violet-400/10" },
+  complex: { label: "Complex", color: "text-sky-400 bg-sky-400/10" },
 };
 
 const FILTERS = [
@@ -31,6 +32,7 @@ const FILTERS = [
   { key: "converter", label: "Converter", color: "text-emerald-400" },
   { key: "datetime", label: "Date/Time", color: "text-rose-400" },
   { key: "statistics", label: "Statistics", color: "text-violet-400" },
+  { key: "complex", label: "Complex", color: "text-sky-400" },
 ];
 
 export default function HistoryPage() {
@@ -165,7 +167,7 @@ export default function HistoryPage() {
       </div>
 
       {/* Filter + stats combined */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
+      <div className="grid grid-cols-4 md:grid-cols-7 gap-2 mb-6">
         {FILTERS.map((f) => {
           const isActive = filter === f.key;
           const count =

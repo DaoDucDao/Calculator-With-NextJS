@@ -7,7 +7,7 @@ export interface HistoryEntry {
   expression: string;
   result: string;
   timestamp: number;
-  type: "scientific" | "programmer" | "converter" | "datetime" | "statistics";
+  type: "scientific" | "programmer" | "converter" | "datetime" | "statistics" | "complex";
 }
 
 export type NumberBase = "DEC" | "HEX" | "OCT" | "BIN";

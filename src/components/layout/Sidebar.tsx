@@ -11,6 +11,7 @@ import {
   CalendarClock,
   ChartColumn,
   History,
+  Sigma,
   Calculator as CalcIcon,
   type LucideIcon,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const NAV_ITEMS: { href: string; label: string; Icon: LucideIcon }[] = [
   { href: "/currency", label: "Currency", Icon: Banknote },
   { href: "/datetime", label: "Date / Time", Icon: CalendarClock },
   { href: "/statistics", label: "Statistics", Icon: ChartColumn },
+  { href: "/complex", label: "Complex", Icon: Sigma },
   { href: "/history", label: "History", Icon: History },
 ];
 
